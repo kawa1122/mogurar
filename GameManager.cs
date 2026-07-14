@@ -1,0 +1,68 @@
+using UnityEngine;
+using TMPro;
+
+public class GameManager : MonoBehaviour
+{
+    public static GameManager instance;
+
+    [Header("UI")]
+    [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] TextMeshProUGUI timeText;
+
+    [Header("制限時間")]
+    public float gameTime = 30f;
+
+    int score = 0;
+    bool isGameOver = false;
+
+    void Awake()
+    {
+        instance = this;
+    }
+
+    void Start()
+    {
+        UpdateScoreText();
+    }
+
+    void Update()
+    {
+        if (isGameOver) return;
+
+        gameTime -= Time.deltaTime;
+
+        timeText.text = "Time : " + Mathf.Ceil(gameTime);
+
+        if (gameTime <= 0)
+        {
+            gameTime = 0;
+            GameOver();
+        }
+    }
+
+    public void AddScore(int point)
+    {
+        if (isGameOver) return;
+
+        score += point;
+        UpdateScoreText();
+    }
+
+    void UpdateScoreText()
+    {
+        scoreText.text = "Score : " + score;
+    }
+
+    void GameOver()
+    {
+        isGameOver = true;
+
+        Debug.Log("ゲーム終了！");
+        Debug.Log("最終スコア : " + score);
+    }
+
+    public bool IsGameOver()
+    {
+        return isGameOver;
+    }
+}
